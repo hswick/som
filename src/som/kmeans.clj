@@ -1,9 +1,6 @@
 (ns som.kmeans
   (require [clojure.math.numeric-tower :as math]
            [clojure.core.matrix :as mat]))
-;;Need to implement this using core.matrix
-
-(mat/sum [1 2 3])
 
 ;;K Means clustering implementation
 (defn normalize [values]
@@ -65,12 +62,14 @@
                                    (min-centroid centroids v)
                                    (first nfreqs))))))))
 
-(defn recalculate-center [cluster]
-  (if (= [] cluster) 0
+(defn recalculate-center [cluster n]
+  (if (= [] cluster) (if (= n 1) 0 (repeat n 0))
       (mat/div (reduce mat/add (map second cluster)) (count cluster))))
 
 (defn adjust-centroids [clusters-map]
-  (map recalculate-center (vals clusters-map)))
+  (let [ks (keys clusters-map)
+        size (count (first ks))])
+  (map (fn [c] (recalculate-center c size)) (vals clusters-map)))
 
 (defn kmeans [k freqs iterations]
   (let [nfreqs (normalized-frequency-map freqs)]
