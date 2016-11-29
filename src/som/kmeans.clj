@@ -1,6 +1,9 @@
 (ns som.kmeans
-  (require [clojure.math.numeric-tower :as math]))
+  (require [clojure.math.numeric-tower :as math]
+           [clojure.core.matrix :as mat]))
 ;;Need to implement this using core.matrix
+
+(mat/sum [1 2 3])
 
 ;;K Means clustering implementation
 (defn normalize [values]
@@ -13,11 +16,11 @@
   (math/expt (- a b) 2))
 
 (defn average [values]
-  (/ (reduce + values) (count values)))
+  (mat/div (reduce mat/add values) (count values)))
 
 ;;Map of normalized frequencies to their tokens
 (defn normalized-frequency-map [freqs]
-  (zipmap (keys freqs) (normalize (vals freqs))))
+  (zipmap (keys freqs) (mat/normalise (vals freqs))))
 
 (defn sample [values n]
   (for [i (range n)] (rand-nth values)))
@@ -41,7 +44,7 @@
 
 (defn min-centroid [centroids v]
   (loop [centroids centroids
-         mn-pair [(first centroids) (dist (first centroids) v)]]
+         mn-pair [(first centroids) (mat/distance (first centroids) v)]]
     (if (empty? centroids) (first mn-pair)
         (recur (rest centroids)
            (let [c (first centroids)]
@@ -64,7 +67,7 @@
 
 (defn recalculate-center [cluster]
   (if (= [] cluster) 0
-      (/ (reduce + (map second cluster)) (count cluster))))
+      (mat/div (reduce mat/add (map second cluster)) (count cluster))))
 
 (defn adjust-centroids [clusters-map]
   (map recalculate-center (vals clusters-map)))
