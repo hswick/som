@@ -4,16 +4,11 @@
             [clojure.data.json :as json]))
 
 ;;Algorithm taken from http://www.ai-junkie.com/ann/som/
-
 (defn random-coll [n]
   (take n (repeatedly #(rand))))
 
 (defn keys-to-ints [data]
   (into {} (for [[k v] data] [(Integer. (re-find #"\d+" k)) v])))
-
-(def poke-data (keys-to-ints (json/read-str (slurp "poke_base_stats.json"))))
-
-(def input-vectors (map mat/normalise (map vals (vals poke-data))))
 
 (defn node [x y n]
   {:x x :y y :weights (mat/matrix (random-coll n))})
@@ -118,10 +113,6 @@
                 neighbors (assoc-dists bmu (find-neighbors nhbr-radius bmu (vals node-map)))
                 neighbors-2 (update-neighbors neighbors l-rate input nhbr-radius)]
             (recur (inc iter-count) (update-node-map node-map neighbors-2)))))))
-
-(def output (som-map 10 10 input-vectors 10000))
-
-;;(spit "pokedata.json" (json/write-str output))
 
 
 

@@ -6,4 +6,6 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/data.json "0.2.6"]
                  [net.mikera/core.matrix "0.52.1"]
-                 [net.mikera/vectorz-clj "0.44.1"]])
+                 [net.mikera/vectorz-clj "0.44.1"]
+                 [org.clojure/math.numeric-tower "0.0.4"]
+                 [quil "2.5.0"]])
