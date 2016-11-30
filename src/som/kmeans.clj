@@ -68,8 +68,8 @@
 
 (defn adjust-centroids [clusters-map]
   (let [ks (keys clusters-map)
-        size (count (first ks))])
-  (map (fn [c] (recalculate-center c size)) (vals clusters-map)))
+        size (count (first ks))]
+    (map (fn [c] (recalculate-center c size)) (vals clusters-map))))
 
 (defn kmeans [k freqs iterations]
   (let [nfreqs (normalized-frequency-map freqs)]
